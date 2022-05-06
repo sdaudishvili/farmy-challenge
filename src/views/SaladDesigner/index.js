@@ -1,1 +1,1 @@
-export { default as SaladDesigner } from "./SaladDesigner";
+export { default } from "./SaladDesigner";
