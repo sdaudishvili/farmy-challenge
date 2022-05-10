@@ -7,7 +7,6 @@
       "presets": ["@babel/preset-react"]
     }
   },
-
   "extends": ["airbnb", "plugin:prettier/recommended", "prettier"],
   "env": {
     "browser": true,
@@ -56,6 +55,7 @@
       }
     ],
     "react/function-component-definition": ["off"],
-    "no-restricted-exports": ["off"]
+    "no-restricted-exports": ["off"],
+    "default-param-last": ["off"]
   }
 }

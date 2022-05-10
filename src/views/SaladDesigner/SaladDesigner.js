@@ -10,10 +10,10 @@ const SaladDesigner = (props) => {
   const [businessLogic, setBusinessLogic] = React.useState(null);
   const [salads, setSalads] = React.useState([]);
 
-  React.useEffect(() => {
-    dataService.get("products").then((response) => setProducts(response));
-    // [...]
-  }, []);
+  // React.useEffect(() => {
+  //   dataService.get("products").then((response) => setProducts(response));
+  //   // [...]
+  // }, []);
 
   // Example of data file save.
   const onSaveClick = () => {

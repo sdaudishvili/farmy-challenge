@@ -1,16 +1,23 @@
-import React, { useId } from "react";
+import React from "react";
 import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import Page from "@/components/Common/Page";
+import { useDispatch, useSelector } from "react-redux";
 import { saladTypes } from "@/constants/saladTypes";
 import { Ingredients } from "./components";
+import { Page } from "@/components/Common";
+import { loadProducts } from "@/store/actions/products.action";
 
 const CreateSalad = () => {
-  const id = useId();
-  console.log(id);
   const [values, setValues] = React.useState({});
+  const { products } = useSelector((store) => store.products);
+  const dispatch = useDispatch();
+
   const changeHandler = (field, value) => {
     setValues({ ...values, [field]: value });
   };
+
+  React.useEffect(() => {
+    dispatch(loadProducts());
+  }, []);
 
   return (
     <Page title="Create Salad">
@@ -30,7 +37,7 @@ const CreateSalad = () => {
             <InputLabel>Type</InputLabel>
             <Select value={values.type || ""} label="Type">
               {saladTypes.map((option) => (
-                <MenuItem value={option.value} onClick={() => changeHandler("type", option.value)}>
+                <MenuItem key={option.value} value={option.value} onClick={() => changeHandler("type", option.value)}>
                   {option.title}
                 </MenuItem>
               ))}
@@ -38,7 +45,11 @@ const CreateSalad = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Ingredients />
+          <Ingredients
+            ingredients={values.ingredients}
+            products={products}
+            onChange={(value) => changeHandler("ingredients", value)}
+          />
         </Grid>
       </Grid>
     </Page>
