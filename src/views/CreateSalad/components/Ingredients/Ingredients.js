@@ -18,9 +18,7 @@ import {
   Typography
 } from "@mui/material";
 
-const reducer = (property) => (acc, cur) => acc + cur[property] * cur.numOfServings;
-
-const Ingredients = ({ products, ingredients, onChange }) => {
+const Ingredients = ({ products, ingredients, onChange, totalCost, totalWeight, ...rest }) => {
   const [curSelectedProduct, setCurSelectedProduct] = React.useState(null);
 
   const addHandler = () => {
@@ -44,11 +42,8 @@ const Ingredients = ({ products, ingredients, onChange }) => {
     onChange([...ingredients]);
   };
 
-  const totalCost = ingredients.reduce(reducer("costPerServing"), 0);
-  const totalWeight = ingredients.reduce(reducer("weightPerServing"), 0);
-
   return (
-    <div>
+    <Box {...rest}>
       <Box display="flex" justifyContent="space-between">
         <Typography variant="body2">Total Cost: {totalCost.toFixed(2)}€</Typography>
         <Typography variant="body2">Total Weight: {totalWeight}g</Typography>
@@ -108,20 +103,24 @@ const Ingredients = ({ products, ingredients, onChange }) => {
           ADD
         </Button>
       </Box>
-    </div>
+    </Box>
   );
 };
 
 Ingredients.propTypes = {
   products: propTypes.instanceOf(Array),
   ingredients: propTypes.instanceOf(Array),
-  onChange: propTypes.func
+  onChange: propTypes.func,
+  totalWeight: propTypes.func,
+  totalCost: propTypes.number
 };
 
 Ingredients.defaultProps = {
   products: [],
   ingredients: [],
-  onChange: () => {}
+  onChange: () => {},
+  totalWeight: 0,
+  totalCost: 0
 };
 
 export default Ingredients;
