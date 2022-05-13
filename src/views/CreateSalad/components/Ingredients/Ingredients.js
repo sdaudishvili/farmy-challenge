@@ -18,7 +18,7 @@ import {
   Typography
 } from "@mui/material";
 
-const Ingredients = ({ products, ingredients, onChange, totalCost, totalWeight, ...rest }) => {
+const Ingredients = React.memo(({ products, ingredients, onChange, totalCost, totalWeight, ...rest }) => {
   const [curSelectedProduct, setCurSelectedProduct] = React.useState(null);
 
   const addHandler = () => {
@@ -40,6 +40,14 @@ const Ingredients = ({ products, ingredients, onChange, totalCost, totalWeight, 
     objectRef.numOfServings += 1;
     // re render
     onChange([...ingredients]);
+  };
+
+  const visibleProducts = products.filter(
+    (product) => ingredients.findIndex((ingredient) => ingredient.id === product.id) === -1
+  );
+
+  const deleteHandler = (id) => {
+    onChange(ingredients.filter((x) => x.id !== id));
   };
 
   return (
@@ -78,7 +86,7 @@ const Ingredients = ({ products, ingredients, onChange, totalCost, totalWeight, 
                   <TableCell>{x.weightPerServing}g</TableCell>
                   <TableCell>{x.costPerServing}€</TableCell>
                   <TableCell align="right">
-                    <Button variant="contained" size="small" color="error">
+                    <Button variant="contained" size="small" color="error" onClick={() => deleteHandler(x.id)}>
                       Delete
                     </Button>
                   </TableCell>
@@ -92,26 +100,26 @@ const Ingredients = ({ products, ingredients, onChange, totalCost, totalWeight, 
         <FormControl variant="outlined" fullWidth>
           <InputLabel>Product</InputLabel>
           <Select value={curSelectedProduct?.id || ""} label="Product">
-            {products.map((option) => (
+            {visibleProducts.map((option) => (
               <MenuItem key={option.id} value={option.id} onClick={() => setCurSelectedProduct(option)}>
                 {option.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <Button sx={{ width: "200px", ml: 3 }} variant="contained" onClick={addHandler}>
+        <Button sx={{ width: "200px", ml: 3 }} variant="contained" onClick={addHandler} disabled={!curSelectedProduct}>
           ADD
         </Button>
       </Box>
     </Box>
   );
-};
+});
 
 Ingredients.propTypes = {
   products: propTypes.instanceOf(Array),
   ingredients: propTypes.instanceOf(Array),
   onChange: propTypes.func,
-  totalWeight: propTypes.func,
+  totalWeight: propTypes.number,
   totalCost: propTypes.number
 };
 
