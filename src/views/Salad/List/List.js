@@ -2,7 +2,7 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, CardHeader, Divider } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ListRenderer, Page } from "@/components/Common";
 import { loadSalads } from "@/store/actions/salads.action";
 
@@ -10,6 +10,7 @@ const ListSalad = () => {
   const { salads } = useSelector((store) => store.salads);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     dispatch(loadSalads());
@@ -30,7 +31,7 @@ const ListSalad = () => {
         <ListRenderer
           displayKeys={["name", "size", "cost", "price", "targetStock", "currentStock"]}
           items={salads}
-          onEditClick={() => console.log("a")}
+          onEditClick={(x) => navigate(`/salads/update/${x.id}`)}
         />
       </Card>
     </Page>

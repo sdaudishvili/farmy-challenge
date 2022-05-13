@@ -12,6 +12,7 @@ const RoutesProvider = () => {
         <Route path="salads">
           <Route index element={<ListSalad />} />
           <Route path="create" element={<CreateSalad />} />
+          <Route path="update/:id" element={<CreateSalad />} />
         </Route>
         <Route path="*" element={<div />} />
       </Route>

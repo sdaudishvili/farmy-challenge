@@ -15,7 +15,7 @@ import {
   Typography
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Ingredients } from "./components";
 import { Page } from "@/components/Common";
 import { loadProducts } from "@/store/actions/products.action";
@@ -39,6 +39,7 @@ const CreateSalad = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const params = useParams();
 
   const changeHandler = (field, value) => {
     setValues({ ...values, [field]: value });
@@ -48,6 +49,28 @@ const CreateSalad = () => {
     dispatch(loadProducts());
     dispatch(loadBusinessLogic());
   }, []);
+
+  React.useEffect(() => {
+    if (params.id && products.length > 0) {
+      const fetchData = async () => {
+        try {
+          const item = await dataService.get(`salads/${params.id}`);
+
+          setValues({
+            ...item,
+            ingredients: item.ingredients.map((x) => ({
+              ...products.find((p) => p.id === x.id),
+              numOfServings: x.numOfServings
+            }))
+          });
+          console.log(item);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }
+  }, [params.id, products]);
 
   const totalCost = rounder(values.ingredients?.reduce(reducer("costPerServing"), 0)) || 0;
   const totalWeight = values.ingredients?.reduce(reducer("weightPerServing"), 0) || 0;
@@ -74,8 +97,13 @@ const CreateSalad = () => {
           currentStock: parseInt(values.currentStock, 10) || 0,
           ingredients: values?.ingredients?.map((x) => ({ id: x.id, numOfServings: x.numOfServings })) || []
         };
-        await dataService.create("salads", newSalad);
-        dispatch(setAlert({ msg: "Salad has been successfully created", type: "success" }));
+        if (params.id) {
+          await dataService.update(`salads/${params.id}`, newSalad);
+          dispatch(setAlert({ msg: "Salad has been successfully created", type: "success" }));
+        } else {
+          await dataService.create("salads", newSalad);
+          dispatch(setAlert({ msg: "Salad has been successfully created", type: "success" }));
+        }
         navigate("/salads");
       } catch (error) {
         dispatch(setAlert({ msg: "Error occured while saving salad", type: "error" }));

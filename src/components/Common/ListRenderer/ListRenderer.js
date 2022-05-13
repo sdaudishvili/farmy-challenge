@@ -32,7 +32,7 @@ const ListRenderer = (props) => {
               {displayKeys && displayKeys.map((x) => <TableCell key={x}>{getValueByPath(item, x)}</TableCell>)}
               <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
                 {onEditClick && (
-                  <Button color="primary" onClick={onEditClick} size="small" variant="outlined">
+                  <Button color="primary" onClick={() => onEditClick(item)} size="small" variant="outlined">
                     Edit
                   </Button>
                 )}
