@@ -63,7 +63,6 @@ const CreateSalad = () => {
               numOfServings: x.numOfServings
             }))
           });
-          console.log(item);
         } catch (error) {
           console.log(error);
         }
