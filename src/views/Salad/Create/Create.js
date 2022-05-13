@@ -15,6 +15,7 @@ import {
   Typography
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { Ingredients } from "./components";
 import { Page } from "@/components/Common";
 import { loadProducts } from "@/store/actions/products.action";
@@ -51,12 +52,13 @@ const CreateSalad = () => {
   const totalWeight = values.ingredients?.reduce(reducer("weightPerServing"), 0) || 0;
 
   const saveHandler = async () => {
+    console.log(values);
     if (
-      !values.title ||
-      !values.type ||
+      !values.name ||
+      !values.size ||
       !values.ingredients ||
       values.ingredients?.length <= 0 ||
-      (!values.targetStockByWeekday && values.targetStockByWeekday !== 0) ||
+      (!values.targetStock && values.targetStock !== 0) ||
       (!values.currentStock && values.currentStock !== 0)
     ) {
       dispatch(setAlert({ msg: "All fields are required", type: "error" }));
@@ -68,7 +70,7 @@ const CreateSalad = () => {
           cost: totalCost,
           price: rounder(totalCost / (1 - margin)),
           hoursFresh,
-          targetStockByWeekday: parseInt(values.targetStockByWeekday, 10) || 0,
+          targetStock: parseInt(values.targetStock, 10) || 0,
           currentStock: parseInt(values.currentStock, 10) || 0
         };
         await dataService.create("salads", newSalad);
@@ -93,19 +95,26 @@ const CreateSalad = () => {
   return (
     <Page title="Create Salad">
       <Card>
-        <CardHeader title="Create Salad" />
+        <CardHeader
+          title="Create Salad"
+          action={
+            <Button variant="contained" to="/salads" LinkComponent={Link}>
+              salads list
+            </Button>
+          }
+        />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={8}>
-              <TextField {...generateTextFieldProps("title")} />
+              <TextField {...generateTextFieldProps("name")} />
             </Grid>
             <Grid item xs={4}>
               <FormControl variant="outlined" fullWidth>
-                <InputLabel>Type</InputLabel>
-                <Select value={values.type || ""} label="Type">
+                <InputLabel>Size</InputLabel>
+                <Select value={values.size || ""} label="Size">
                   {saladTypesKeys.map((option) => (
-                    <MenuItem key={option} value={option} onClick={() => changeHandler("type", option)}>
+                    <MenuItem key={option} value={option} onClick={() => changeHandler("size", option)}>
                       {firstLetterToUpperCase(option)}
                     </MenuItem>
                   ))}
@@ -113,15 +122,15 @@ const CreateSalad = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField {...generateTextFieldProps("targetStockByWeekday")} type="number" />
+              <TextField {...generateTextFieldProps("targetStock")} type="number" />
             </Grid>
             <Grid item xs={6}>
               <TextField {...generateTextFieldProps("currentStock")} type="number" />
             </Grid>
           </Grid>
-          {values.type && (
+          {values.size && (
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Target Cost/Weight: {saladTypes[values.type]?.targetCost}€ / {saladTypes[values.type]?.targetWeight}g
+              Target Cost/Weight: {saladTypes[values.size]?.targetCost}€ / {saladTypes[values.size]?.targetWeight}g
             </Typography>
           )}
           <Ingredients
