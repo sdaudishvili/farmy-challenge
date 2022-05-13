@@ -15,7 +15,7 @@ import {
   Typography
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Ingredients } from "./components";
 import { Page } from "@/components/Common";
 import { loadProducts } from "@/store/actions/products.action";
@@ -37,6 +37,7 @@ const CreateSalad = () => {
   const { products } = useSelector((store) => store.products);
   const { saladTypes, margin } = useSelector((store) => store.businessLogic);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const changeHandler = (field, value) => {
@@ -52,7 +53,6 @@ const CreateSalad = () => {
   const totalWeight = values.ingredients?.reduce(reducer("weightPerServing"), 0) || 0;
 
   const saveHandler = async () => {
-    console.log(values);
     if (
       !values.name ||
       !values.size ||
@@ -71,10 +71,12 @@ const CreateSalad = () => {
           price: rounder(totalCost / (1 - margin)),
           hoursFresh,
           targetStock: parseInt(values.targetStock, 10) || 0,
-          currentStock: parseInt(values.currentStock, 10) || 0
+          currentStock: parseInt(values.currentStock, 10) || 0,
+          ingredients: values?.ingredients?.map((x) => ({ id: x.id, numOfServings: x.numOfServings })) || []
         };
         await dataService.create("salads", newSalad);
         dispatch(setAlert({ msg: "Salad has been successfully created", type: "success" }));
+        navigate("/salads");
       } catch (error) {
         dispatch(setAlert({ msg: "Error occured while saving salad", type: "error" }));
       }

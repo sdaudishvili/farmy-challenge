@@ -12,7 +12,6 @@ export const setSalads = (payload) => {
 export const loadSalads = () => async (dispatch) => {
   try {
     const res = await dataService.get("salads");
-    console.log(res);
     dispatch(setSalads(res));
   } catch (error) {
     console.log(error);
