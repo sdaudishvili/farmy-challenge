@@ -1,18 +1,23 @@
-/* eslint-disable no-unused-vars */
-
-import { AppBar, Button, Container, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Container, ListItemText, MenuItem, MenuList, Toolbar } from "@mui/material";
 import React from "react";
-import { Outlet } from "react-router-dom";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Link, Outlet } from "react-router-dom";
 
 const DefaultLayout = () => {
   return (
     <div className="App">
       <AppBar position="static">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
+          <MenuList sx={{ display: "flex", alignItems: "center" }}>
+            <MenuItem component={Link} to="/salads">
+              <ListItemText>Salads List</ListItemText>
+            </MenuItem>
+            <MenuItem component={Link} to="/salads/create">
+              <ListItemText>Create Salad</ListItemText>
+            </MenuItem>
+            <MenuItem component={Link} to="/product-ordering">
+              <ListItemText>Product ordering</ListItemText>
+            </MenuItem>
+          </MenuList>
         </Toolbar>
       </AppBar>
       <Container sx={{ marginTop: 3 }}>
